@@ -19,7 +19,7 @@ OSTicket is being served by [nginx](http://wiki.nginx.org/Main) using [PHP-FPM](
 
 # Quick Start
 
-Ensure you have a MySQL container running that OSTicket can use to store it's data.
+Ensure you have a MySQL container running that OSTicket can use to store its data.
 
 ```bash
 docker run --name osticket_mysql -d -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_USER=osticket -e MYSQL_PASSWORD=secret -e MYSQL_DATABASE=osticket mysql
@@ -28,10 +28,10 @@ docker run --name osticket_mysql -d -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_USER=
 Now run this image and link the MySQL container.
 
 ```bash
-docker run --name osticket -d --link osticketysql:mysql -p 8080:80 -e MYSQL_PASSWORD=secret campbellsoftwaresolutions/osticket
+docker run --name osticket -d --link osticket_mysql:mysql -p 8080:80 -e MYSQL_PASSWORD=secret campbellsoftwaresolutions/osticket
 ```
 
-Wait for the installation to complete then browse to your OSTicket [staff control panel](http://localhost:8080/scp). Login with default admin user & password:
+Wait for the installation to complete then browse to your OSTicket staff control panel at `http://localhost:8080/scp`. Login with default admin user & password:
 
 * username: **ostadmin**
 * password: **Admin1**
