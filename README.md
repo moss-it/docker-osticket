@@ -31,7 +31,7 @@ Now run this image and link the MySQL container.
 docker run --name osticket -d --link osticketysql:mysql -p 8080:80 -e MYSQL_PASSWORD=secret campbellsoftwaresolutions/osticket
 ```
 
-Wait for the installation to complete then browse to your OSTicket staff control panel at `http://localhost:8080/scp`. Login with default admin user & password:
+Wait for the installation to complete then browse to your OSTicket [staff control panel](http://localhost:8080/scp). Login with default admin user & password:
 
 * username: **ostadmin**
 * password: **Admin1**
