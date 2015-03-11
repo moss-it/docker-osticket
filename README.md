@@ -48,7 +48,7 @@ OSTicket requires that the MySQL connection specifies a user with full permissio
 
 ## Mandatory settings
 
-```MYSQL_PASSWORD```
+`MYSQL_PASSWORD`
 
 The password for the specified user used when connecting to the MySQL server.
 
@@ -56,23 +56,23 @@ The password for the specified user used when connecting to the MySQL server.
 
 The following MySQL connection settings can be set if required but have sensible defaults.
 
-```MYSQL_PREFIX```
+`MYSQL_PREFIX`
 
 The table prefix for this installation. Unlikely you will need to change this unless you are running on a shared
 installation. Defaults to 'ost_'.
 
-```MYSQL_DATABASE```
+`MYSQL_DATABASE`
 
 The name of the database to connect to. Defaults to 'osticket'.
 
-```MYSQL_USER```
+`MYSQL_USER`
 
 The user name to use when connecting to the MySQL server. Defaults to 'osticket'.
 
 
 # Environmental Variables
 
-```INSTALL_SECRET```
+`INSTALL_SECRET`
 
 Secret string value for OST installation. A random value is generated on start-up and persisted within the container if this is not provided.
 
@@ -83,31 +83,31 @@ The remaining environmental variables can be used as a convenience to provide de
 but most of these settings can be changed through the admin panel if required. These are only used when creating
 the initial database.
 
-```INSTALL_NAME```
+`INSTALL_NAME`
 
 The name of the helpdesk to create if installing. Defaults to "My Helpdesk".
 
-```INSTALL_EMAIL```
+`INSTALL_EMAIL`
 
 Helpdesk email account. Defaults to 'helpdesk@example.com'
 
-```INSTALL_FIRSTNAME```
+`INSTALL_FIRSTNAME`
 
 First name of automatically created administrative user. Defaults to 'Admin'.
 
-```INSTALL_LASTNAME```
+`INSTALL_LASTNAME`
 
 Last name of automatically created administrative user. Defaults to 'User'.
 
-```INSTALL_EMAIL```
+`INSTALL_EMAIL`
 
 Email address of automatically created administrative user. Defaults to 'admin@example.com'.
 
-```INSTALL_USERNAME```
+`INSTALL_USERNAME`
 
 User name to use for automatically created administrative user. Defaults to 'ostadmin'.
 
-```INSTALL_PASSWORD```
+`INSTALL_PASSWORD`
 
 Password to use for automatically created administrative user. Defaults to 'Admin1'.
 
