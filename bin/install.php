@@ -1,5 +1,6 @@
 <?php
 // (C) Campbell Software Solutions 2015
+// Portions (C) 2006-2013 osTicket
 
 //Configure settings from environmental variables
 $_SERVER['HTTP_ACCEPT_LANGUAGE'] = getenv("LANGUAGE") ?: "en-us";
@@ -42,8 +43,8 @@ if (!isset($vars['dbpass'])) {
 }
 
 //Require files
-chdir("/data/upload/setup");
-require "/data/upload/setup/setup.inc.php";
+chdir("/data/upload/setup_hidden");
+require "/data/upload/setup_hidden/setup.inc.php";
 require_once INC_DIR.'class.installer.php';
 
 //Create installer class

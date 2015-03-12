@@ -27,7 +27,10 @@ RUN apt-get update && apt-get -y install \
 RUN wget -O osTicket.zip http://osticket.com/sites/default/files/download/osTicket-v${OSTICKET_VERSION}.zip && \
     unzip osTicket.zip && \
     rm osTicket.zip && \
-    chown -R www-data:www-data /data/upload/
+    chown -R www-data:www-data /data/upload/ && \
+    mv /data/upload/setup /data/upload/setup_hidden && \
+    chown -R root:root /data/upload/setup_hidden && \
+    chmod 700 /data/upload/setup_hidden
 
 # Configure nginx
 RUN sed -i -e"s/keepalive_timeout\s*65/keepalive_timeout 2/" /etc/nginx/nginx.conf && \
@@ -47,5 +50,6 @@ ADD virtualhost /etc/nginx/sites-available/default
 ADD supervisord.conf /data/supervisord.conf
 ADD bin/ /data/bin
 
+VOLUME ["/data/upload/include/plugins","/var/log/nginx"]
 EXPOSE 80
 CMD ["/data/bin/start.sh"]

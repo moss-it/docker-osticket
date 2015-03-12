@@ -6,8 +6,7 @@ set -e
 if [ ! -z "$MYSQL_PORT" ]; then
   echo Using linked MySQL connection - $MYSQL_PORT
   php /data/bin/install.php
-  echo Applying file security
-  rm -rf /data/upload/setup
+  echo Applying configuration file security
   chmod 644 /data/upload/include/ost-config.php
 else
   echo No MySQL linked container detected, manual configuration & installation will be required.
