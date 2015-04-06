@@ -6,7 +6,7 @@ RUN mkdir /data
 WORKDIR /data
 
 # environment for osticket
-ENV OSTICKET_VERSION 1.9.5.1
+ENV OSTICKET_VERSION 1.9.7
 ENV HOME /data
 
 # requirements
@@ -31,6 +31,20 @@ RUN wget -O osTicket.zip http://osticket.com/sites/default/files/download/osTick
     mv /data/upload/setup /data/upload/setup_hidden && \
     chown -R root:root /data/upload/setup_hidden && \
     chmod 700 /data/upload/setup_hidden
+    
+# Download more languages packs...
+RUN wget -O fr.phar http://osticket.com/sites/default/files/download/lang/fr.phar && \
+    mv fr.phar /data/upload/include/i18n/ && \
+    wget -O ar.phar http://osticket.com/sites/default/files/download/lang/ar.phar && \
+    mv ar.phar /data/upload/include/i18n/ && \
+    wget -O pt_BR.phar http://osticket.com/sites/default/files/download/lang/pt_BR.phar && \
+    mv pt_BR.phar /data/upload/include/i18n/ && \
+    wget -O it.phar http://osticket.com/sites/default/files/download/lang/it.phar && \
+    mv it.phar /data/upload/include/i18n/ && \
+    wget -O es_ES.phar http://osticket.com/sites/default/files/download/lang/es_ES.phar && \
+    mv es_ES.phar /data/upload/include/i18n/ && \
+    wget -O de.phar http://osticket.com/sites/default/files/download/lang/de.phar && \
+    mv de.phar /data/upload/include/i18n/
 
 # Configure nginx
 RUN sed -i -e"s/keepalive_timeout\s*65/keepalive_timeout 2/" /etc/nginx/nginx.conf && \

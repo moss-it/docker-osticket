@@ -93,7 +93,9 @@ if (!$vars['siri']) {
     $vars['siri'] = file_get_contents(SECRET_FILE);
   } else {
     echo "Generating new installation secret and saving\n";
-    $vars['siri'] = Misc::randCode(32);
+    //$vars['siri'] = Misc::randCode(32);
+    // Temp fix for the "Crypto Not Found" Fatal Error, on ost v1.9.7, generate symply random string
+    $vars['siri'] = substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890_="), 0, 32);
     file_put_contents(SECRET_FILE, $vars['siri']);
   }
 } else {
