@@ -20,7 +20,7 @@ $vars = array(
   'dbhost'   => getenv("MYSQL_PORT_3306_TCP_ADDR"),
   'dbname'   => getenv("MYSQL_DATABASE")            ?: 'osticket',
   'dbuser'   => getenv("MYSQL_USER")                ?: 'osticket',
-  'dbpass'   => getenv("MYSQL_PASSWORD"),
+  'dbpass'   => getenv("MYSQL_PASSWORD")            ?: getenv("MYSQL_ENV_MYSQL_PASSWORD"),
 
   'siri'     => getenv("INSTALL_SECRET"),
   'config'   => getenv("INSTALL_CONFIG") ?: '/data/upload/include/ost-sampleconfig.php'
@@ -93,8 +93,7 @@ if (!$vars['siri']) {
     $vars['siri'] = file_get_contents(SECRET_FILE);
   } else {
     echo "Generating new installation secret and saving\n";
-    //$vars['siri'] = Misc::randCode(32);
-    // Temp fix for the "Crypto Not Found" Fatal Error, on ost v1.9.7, generate symply random string
+    //Note that this randomly generated value is not intended to secure production sites!
     $vars['siri'] = substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890_="), 0, 32);
     file_put_contents(SECRET_FILE, $vars['siri']);
   }
