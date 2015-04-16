@@ -9,7 +9,7 @@ if [ ! -z "$MYSQL_PORT" ]; then
   echo Applying configuration file security
   chmod 644 /data/upload/include/ost-config.php
 else
-  echo No MySQL linked container detected, manual configuration & installation will be required.
+  echo No MySQL linked container detected, manual configuration \& installation will be required.
 fi
 
 #Launch supervisor to manage processes
