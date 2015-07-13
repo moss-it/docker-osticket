@@ -17,7 +17,7 @@ $vars = array(
   'passwd2'     => getenv("INSTALL_PASSWORD")  ?: 'Admin1',
 
   'prefix'   => getenv("MYSQL_PREFIX")              ?: 'ost_',
-  'dbhost'   => getenv("MYSQL_PORT_3306_TCP_ADDR"),
+  'dbhost'   => getenv("MYSQL_HOST")                ?: 'mysql',
   'dbname'   => getenv("MYSQL_DATABASE")            ?: 'osticket',
   'dbuser'   => getenv("MYSQL_USER")                ?: 'osticket',
   'dbpass'   => getenv("MYSQL_PASSWORD")            ?: getenv("MYSQL_ENV_MYSQL_PASSWORD"),
@@ -34,14 +34,6 @@ function err( $msg) {
   exit(1);
 }
 
-//Check mandatory settings provided
-if (!isset($vars['dbhost'])) {
-  err('Missing required environmental variable: MYSQL_HOST');
-}
-if (!isset($vars['dbpass'])) {
-  err('Missing required environmental variable: MYSQL_PASSWORD');
-}
-
 //Require files
 chdir("/data/upload/setup_hidden");
 require "/data/upload/setup_hidden/setup.inc.php";
@@ -50,6 +42,23 @@ require_once INC_DIR.'class.installer.php';
 //Create installer class
 define('OSTICKET_CONFIGFILE','/data/upload/include/ost-config.php');
 $installer = new Installer(OSTICKET_CONFIGFILE); //Installer instance.
+
+//Determine if using linked container
+$linked = (boolean)getenv("MYSQL_PORT");
+
+if (!$linked) {
+  echo "Using external MySQL connection\n";
+
+  //Check mandatory connection settings provided
+  if (!getenv("MYSQL_HOST")) {
+    err('Missing required environmental variable MYSQL_HOST');
+  }
+  if (!getenv("MYSQL_PASSWORD")) {
+    err('Missing required environmental variable: MYSQL_PASSWORD');
+  }
+} else {
+  echo "Using linked MySQL container\n";
+}
 
 //Wait for database connection
 echo "Waiting for database TCP connection to become available...\n";

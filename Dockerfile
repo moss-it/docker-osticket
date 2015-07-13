@@ -6,7 +6,7 @@ RUN mkdir /data
 WORKDIR /data
 
 # environment for osticket
-ENV OSTICKET_VERSION 1.9.7
+ENV OSTICKET_VERSION 1.9.9
 ENV HOME /data
 
 # requirements

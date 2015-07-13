@@ -3,7 +3,7 @@ docker-osticket
 
 # Introduction
 
-Docker image for running version 1.9.7 of [OSTicket](http://osticket.com).
+Docker image for running version 1.9.9 of [OSTicket](http://osticket.com).
 
 This image has been created from the original docker-osticket image by [Petter A. Helset](mailto:petter@helset.eu).
 
@@ -45,23 +45,27 @@ passwords above and read the rest of this documentation!
 
 # MySQL connection
 
-You need to link your MySQL container to this image with the alias name ```mysql```.
+The recommended connection method is to link your MySQL container to this image with the alias name ```mysql```. However, if you
+are using an external MySQL server then you can specify the connection details using environmental variables.
 
 OSTicket requires that the MySQL connection specifies a user with full permissions to the specified database. This is required for the automatic
  database installation.
 
 The OSTicket configuration file is re-created from the template every time the container is started. This ensures the
-MySQL connection details are always kept up to date automatically, e.g. when linked container IP addresses changes.
+MySQL connection details are always kept up to date automatically in case of any changes.
 
-## Mandatory settings
+## Linked container Settings
 
-There are no mandatory settings required when you link your MySQL container with the alias `mysql` with the appropriate
-environmental variables as per the above example.
+There are no mandatory settings required when you link your MySQL container with the alias `mysql` as per the quick start example.
 
-## Optional settings
+## External connection settings
 
-The following MySQL connection settings can be set if required but have sensible defaults. You would normally only override
-these if required for some reason, e.g. connecting to an external database server instead of a linked container.
+The following environmental variables should be set when connecting to an external MySQL server.
+
+`MYSQL_HOST`
+
+The host name or IP address of the MySQL host to connect to. This is not required when you link a container
+with the alias `mysql`. This must be provided if not using a linked container.
 
 `MYSQL_PASSWORD`
 
@@ -81,11 +85,6 @@ The name of the database to connect to. Defaults to 'osticket'.
 `MYSQL_USER`
 
 The user name to use when connecting to the MySQL server. Defaults to 'osticket'.
-
-`MYSQL_PORT_3306_TCP_ADDR`
-
-The IP address of the MySQL host to connect to. This value is automatically supplied by Docker when you link a container
-with the alias `mysql`. You could also place a FQDN in this value if required.
 
 # Volumes
 
