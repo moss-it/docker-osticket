@@ -1,6 +1,6 @@
 <?php
 // (C) Campbell Software Solutions 2015
-// Portions (C) 2006-2013 osTicket
+// Portions (C) 2006-2015 osTicket
 
 //Configure settings from environmental variables
 $_SERVER['HTTP_ACCEPT_LANGUAGE'] = getenv("LANGUAGE") ?: "en-us";
@@ -22,6 +22,16 @@ $vars = array(
   'dbuser'   => getenv("MYSQL_USER")                ?: 'osticket',
   'dbpass'   => getenv("MYSQL_PASSWORD")            ?: getenv("MYSQL_ENV_MYSQL_PASSWORD"),
 
+  'smtp_host'       => getenv("SMTP_HOST")            ?: 'localhost',
+  'smtp_port'       => getenv("SMTP_PORT")            ?: 25,
+  'smtp_from'       => getenv("SMTP_FROM"),
+  'smtp_tls'        => getenv("SMTP_TLS")             ?: 1,
+  'smtp_tls_certs'  => getenv("SMTP_TLS_CERTS")       ?: '/etc/ssl/certs/ca-certificates.crt',
+  'smtp_user'       => getenv("SMTP_USER"),
+  'smtp_pass'       => getenv("SMTP_PASSWORD"),
+
+  'cron_interval'   => getenv("CRON_INTERVAL")        ?: 5,
+
   'siri'     => getenv("INSTALL_SECRET"),
   'config'   => getenv("INSTALL_CONFIG") ?: '/data/upload/include/ost-sampleconfig.php'
 );
@@ -34,10 +44,53 @@ function err( $msg) {
   exit(1);
 }
 
-//Require files
+function boolToOnOff($v) {
+  return ((boolean) $v) ? 'on' : 'off';
+}
+
+//Require files (must be done before any output to avoid session start warnings)
 chdir("/data/upload/setup_hidden");
 require "/data/upload/setup_hidden/setup.inc.php";
 require_once INC_DIR.'class.installer.php';
+
+
+/************************* Mail Configuration *******************************************/
+define('MAIL_CONFIG_FILE','/etc/msmtp');
+
+echo "Configuring mail settings\n";
+if (!$mailConfig = file_get_contents('/data/msmtp.conf')) {
+  err("Failed to load mail configuration file");
+};
+$mailConfig = str_replace('%SMTP_HOSTNAME%', $vars['smtp_host'], $mailConfig);
+$mailConfig = str_replace('%SMTP_PORT%', $vars['smtp_port'], $mailConfig);
+$v = !empty($vars['smtp_from']) ? $vars['smtp_from'] : $vars['smtp_user'];
+$mailConfig = str_replace('%SMTP_FROM%', $v, $mailConfig);
+$mailConfig = str_replace('%SMTP_USER%', $vars['smtp_user'], $mailConfig);
+$mailConfig = str_replace('%SMTP_PASS%', $vars['smtp_pass'], $mailConfig);
+$mailConfig = str_replace('%SMTP_TLS_CERTS%', $vars['smtp_tls_certs'], $mailConfig);
+
+$mailConfig = str_replace('%SMTP_TLS%', boolToOnOff($vars['smtp_tls']), $mailConfig);
+$mailConfig = str_replace('%SMTP_AUTH%', boolToOnOff($vars['smtp_user']), $mailConfig);
+
+if (!file_put_contents(MAIL_CONFIG_FILE, $mailConfig) || !chown(MAIL_CONFIG_FILE,'www-data')
+   || !chgrp(MAIL_CONFIG_FILE,'www-data') || !chmod(MAIL_CONFIG_FILE,0600)) {
+   err("Failed to write mail configuration file");
+}
+
+//Cron interval - enable or disable
+define('CRON_JOB_FILE','/etc/cron.d/osticket');
+
+$interval = (int)$vars['cron_interval'];
+if ($interval > 0) {
+  echo "OSTicket cron job is set to run every {$interval} minutes\n";
+  $cron = "*/{$interval} * * * * www-data /usr/bin/php -c /etc/php5/fpm/php.ini /data/upload/api/cron.php\n";
+  file_put_contents(CRON_JOB_FILE, $cron);
+} else {
+  echo "OSTicket cron job is disabled\n";
+  unlink(CRON_JOB_FILE);
+}
+
+/************************* OSTicket Installation *******************************************/
 
 //Create installer class
 define('OSTICKET_CONFIGFILE','/data/upload/include/ost-config.php');

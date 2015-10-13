@@ -14,8 +14,10 @@ It has a few modifications:
   * AJAX issues fixed that made original image unusable
   * Now designed to work with a linked [MySQL](https://registry.hub.docker.com/u/library/mysql/) docker container.
   * Automates configuration file & database installation
+  * EMail support 
 
-OSTicket is being served by [nginx](http://wiki.nginx.org/Main) using [PHP-FPM](http://php-fpm.org/) with PHP5.
+OSTicket is being served by [nginx](http://wiki.nginx.org/Main) using [PHP-FPM](http://php-fpm.org/) with PHP5. 
+PHP5's [mail](http://php.net/manual/en/function.mail.php) function is configured to use [msmtp](http://msmtp.sourceforge.net/) to send out-going messages.
 
 The `setup/` directory has been renamed as `setup_hidden/` and the file system permissions deny nginx access to this
 location. It was not removed as the setup files are required as part of the automatic configuration during container
@@ -58,7 +60,7 @@ MySQL connection details are always kept up to date automatically in case of any
 
 There are no mandatory settings required when you link your MySQL container with the alias `mysql` as per the quick start example.
 
-## External connection settings
+## External MySQL connection settings
 
 The following environmental variables should be set when connecting to an external MySQL server.
 
@@ -85,6 +87,60 @@ The name of the database to connect to. Defaults to 'osticket'.
 `MYSQL_USER`
 
 The user name to use when connecting to the MySQL server. Defaults to 'osticket'.
+
+# Mail Configuration
+
+The image does not run a MTA. Although one could be installed quite easily, getting the setup so that external mail servers
+will accept mail from your host & domain is not trivial due to anti-spam measures. This is additionally difficult to do 
+from ephemeral docker containers that run in a cloud where the host may change etc.
+
+Hence this image supports OSTicket sending of mail by sending directly to designated a SMTP server. 
+However, you must provide the relevant SMTP settings through environmental variables before this will function.
+
+To automatically collect email from an external IMAP or POP3 account, configure the settings for the relevant email address in 
+your admin control panel as normal (Admin Panel -> Emails). 
+
+## SMTP Settings
+
+`SMTP_HOST`
+
+The host name (or IP address) of the SMTP server to send all outgoing mail through. Defaults to 'localhost'.
+
+`SMTP_PORT`
+
+The TCP port to connect to on the server. Defaults to '25'. Usually one of 25, 465 or 587.
+
+`SMTP_FROM`
+
+The envelope from address to use when sending email (note that is not the same as the From: header). This must be 
+provided for sending mail to function. However, if not specified, this will default to the value of `SMTP_USER` if this is provided.
+
+`SMTP_TLS`
+
+Boolean (1 or 0) value indicating if TLS should be used to create a secure connection to the server. Defaults to true.
+
+`SMTP_TLS_CERTS`
+
+If TLS is in use, indicates file containing root certificates used to verify server certificate. Defaults to system
+installed ca certificates list. This would normally only need changed if you are using your own certificate authority
+or are connecting to a server with a self signed certificate.
+
+`SMTP_USER`
+
+The user identity to use for SMTP authentication. Specifying a value here will enable SMTP authentication. This will also
+be used for the `SMTP_FROM` value if this is not explicitly specified. Defaults to no value.
+
+`SMTP_PASSWORD`
+
+The password associated with the user for SMTP authentication. Defaults to no value.
+
+## IMAP/POP3 Settings
+
+`CRON_INTERVAL`
+
+Specifies how often (in minutes) that OSTicket cron script should be ran to check for incoming emails. Defaults to 5 
+minutes. Set to 0 to disable running of cron script. Note that this works in conjuction with the email check interval
+specified in the admin control panel, you need to specify both to the value you'd like!
 
 # Volumes
 

@@ -6,7 +6,7 @@ RUN mkdir /data
 WORKDIR /data
 
 # environment for osticket
-ENV OSTICKET_VERSION 1.9.12
+ENV OSTICKET_VERSION 1.10-rc2
 ENV HOME /data
 
 # requirements
@@ -14,6 +14,8 @@ RUN apt-get update && apt-get -y install \
   nano \
   wget \
   unzip \
+  msmtp \
+  ca-certificates \
   supervisor \
   nginx \
   php5-cli \
@@ -49,6 +51,7 @@ RUN sed -i -e"s/keepalive_timeout\s*65/keepalive_timeout 2/" /etc/nginx/nginx.co
 RUN sed -i -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" /etc/php5/fpm/php.ini && \
     sed -i -e "s/upload_max_filesize\s*=\s*2M/upload_max_filesize = 100M/g" /etc/php5/fpm/php.ini && \
     sed -i -e "s/post_max_size\s*=\s*8M/post_max_size = 100M/g" /etc/php5/fpm/php.ini && \
+    sed -i -e 's#;sendmail_path\s*=\s*#sendmail_path = "/usr/bin/msmtp -C /etc/msmtp -t "#g' /etc/php5/fpm/php.ini && \
     sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php5/fpm/php-fpm.conf && \
     sed -i -e "s/;catch_workers_output\s*=\s*yes/catch_workers_output = yes/g" /etc/php5/fpm/pool.d/www.conf && \
     php5enmod imap
@@ -56,6 +59,7 @@ RUN sed -i -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" /etc/php5/fpm/php.ini
 # Add nginx site
 ADD virtualhost /etc/nginx/sites-available/default
 ADD supervisord.conf /data/supervisord.conf
+ADD msmtp.conf /data/msmtp.conf
 ADD bin/ /data/bin
 
 VOLUME ["/data/upload/include/plugins","/var/log/nginx"]
