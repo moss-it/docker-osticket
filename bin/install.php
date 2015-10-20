@@ -25,7 +25,7 @@ $vars = array(
   'smtp_host'       => getenv("SMTP_HOST")            ?: 'localhost',
   'smtp_port'       => getenv("SMTP_PORT")            ?: 25,
   'smtp_from'       => getenv("SMTP_FROM"),
-  'smtp_tls'        => getenv("SMTP_TLS")             ?: 1,
+  'smtp_tls'        => getenv("SMTP_TLS"),
   'smtp_tls_certs'  => getenv("SMTP_TLS_CERTS")       ?: '/etc/ssl/certs/ca-certificates.crt',
   'smtp_user'       => getenv("SMTP_USER"),
   'smtp_pass'       => getenv("SMTP_PASSWORD"),
@@ -46,6 +46,14 @@ function err( $msg) {
 
 function boolToOnOff($v) {
   return ((boolean) $v) ? 'on' : 'off';
+}
+
+function convertStrToBool($varName, $default) {
+  global $vars;
+   if ($vars[$varName] != '') {
+     return $vars[$varName] == '1';
+   }
+   return $default;
 }
 
 //Require files (must be done before any output to avoid session start warnings)
@@ -69,8 +77,8 @@ $mailConfig = str_replace('%SMTP_USER%', $vars['smtp_user'], $mailConfig);
 $mailConfig = str_replace('%SMTP_PASS%', $vars['smtp_pass'], $mailConfig);
 $mailConfig = str_replace('%SMTP_TLS_CERTS%', $vars['smtp_tls_certs'], $mailConfig);
 
-$mailConfig = str_replace('%SMTP_TLS%', boolToOnOff($vars['smtp_tls']), $mailConfig);
-$mailConfig = str_replace('%SMTP_AUTH%', boolToOnOff($vars['smtp_user']), $mailConfig);
+$mailConfig = str_replace('%SMTP_TLS%', boolToOnOff(convertStrToBool('smtp_tls',true)), $mailConfig);
+$mailConfig = str_replace('%SMTP_AUTH%', boolToOnOff($vars['smtp_user'] != ''), $mailConfig);
 
 if (!file_put_contents(MAIL_CONFIG_FILE, $mailConfig) || !chown(MAIL_CONFIG_FILE,'www-data')
    || !chgrp(MAIL_CONFIG_FILE,'www-data') || !chmod(MAIL_CONFIG_FILE,0600)) {
