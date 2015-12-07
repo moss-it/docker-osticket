@@ -188,23 +188,23 @@ the initial database.
 
 The name of the helpdesk to create if installing. Defaults to "My Helpdesk".
 
-`INSTALL_FIRSTNAME`
+`ADMIN_FIRSTNAME`
 
 First name of automatically created administrative user. Defaults to 'Admin'.
 
-`INSTALL_LASTNAME`
+`ADMIN_LASTNAME`
 
 Last name of automatically created administrative user. Defaults to 'User'.
 
-`INSTALL_EMAIL`
+`ADMIN_EMAIL`
 
 Email address of automatically created administrative user. Defaults to 'admin@example.com'.
 
-`INSTALL_USERNAME`
+`ADMIN_USERNAME`
 
 User name to use for automatically created administrative user. Defaults to 'ostadmin'.
 
-`INSTALL_PASSWORD`
+`ADMIN_PASSWORD`
 
 Password to use for automatically created administrative user. Defaults to 'Admin1'.
 

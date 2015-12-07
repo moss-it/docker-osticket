@@ -9,12 +9,12 @@ $vars = array(
   'name'      => getenv("INSTALL_NAME")  ?: 'My Helpdesk',
   'email'     => getenv("INSTALL_EMAIL") ?: 'helpdesk@example.com',
 
-  'fname'       => getenv("INSTALL_FIRSTNAME") ?: 'Admin',
-  'lname'       => getenv("INSTALL_LASTNAME")  ?: 'User',
-  'admin_email' => getenv("INSTALL_EMAIL")     ?: 'admin@example.com',
-  'username'    => getenv("INSTALL_USERNAME")  ?: 'ostadmin',
-  'passwd'      => getenv("INSTALL_PASSWORD")  ?: 'Admin1',
-  'passwd2'     => getenv("INSTALL_PASSWORD")  ?: 'Admin1',
+  'fname'       => getenv("ADMIN_FIRSTNAME") ?: 'Admin',
+  'lname'       => getenv("ADMIN_LASTNAME")  ?: 'User',
+  'admin_email' => getenv("ADMIN_EMAIL")     ?: 'admin@example.com',
+  'username'    => getenv("ADMIN_USERNAME")  ?: 'ostadmin',
+  'passwd'      => getenv("ADMIN_PASSWORD")  ?: 'Admin1',
+  'passwd2'     => getenv("ADMIN_PASSWORD")  ?: 'Admin1',
 
   'prefix'   => getenv("MYSQL_PREFIX")              ?: 'ost_',
   'dbhost'   => getenv("MYSQL_HOST")                ?: 'mysql',
