@@ -22,6 +22,7 @@ RUN apt-get update && apt-get -y install \
   php5-fpm \
   php5-imap \
   php5-gd \
+  php5-curl \
   php5-mysql && \
   rm -rf /var/lib/apt/lists/*
 
