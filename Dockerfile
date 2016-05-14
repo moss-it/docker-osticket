@@ -1,5 +1,5 @@
-FROM ubuntu:14.04
-MAINTAINER Martin Campbell <martin@campbellsoftware.co.uk>
+FROM debian:8
+MAINTAINER Thiago Almeida <thiagoalmeidasa@gmail.com>
 
 # setup workdir
 RUN mkdir /data
@@ -10,20 +10,23 @@ ENV OSTICKET_VERSION 1.9.12
 ENV HOME /data
 
 # requirements
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
-  nano \
-  wget \
-  unzip \
-  msmtp \
+RUN apt-get update \
+  && DEBIAN_FRONTEND=noninteractive \
+  apt-get -y install --no-install-recommends \
   ca-certificates \
-  supervisor \
+  cron \
+  msmtp \
+  nano \
   nginx \
   php5-cli \
-  php5-fpm \
-  php5-imap \
-  php5-gd \
   php5-curl \
-  php5-mysql && \
+  php5-fpm \
+  php5-gd \
+  php5-imap \
+  php5-mysql \
+  supervisor \
+  unzip \
+  wget && \
   rm -rf /var/lib/apt/lists/*
 
 # Download & install OSTicket
@@ -36,12 +39,8 @@ RUN wget -nv -O osTicket.zip http://osticket.com/sites/default/files/download/os
     chmod 700 /data/upload/setup_hidden
     
 # Download languages packs
-RUN wget -nv -O upload/include/i18n/fr.phar http://osticket.com/sites/default/files/download/lang/fr.phar && \
-    wget -nv -O upload/include/i18n/ar.phar http://osticket.com/sites/default/files/download/lang/ar.phar && \
     wget -nv -O upload/include/i18n/pt_BR.phar http://osticket.com/sites/default/files/download/lang/pt_BR.phar && \
-    wget -nv -O upload/include/i18n/it.phar http://osticket.com/sites/default/files/download/lang/it.phar && \
     wget -nv -O upload/include/i18n/es_ES.phar http://osticket.com/sites/default/files/download/lang/es_ES.phar && \
-    wget -nv -O upload/include/i18n/de.phar http://osticket.com/sites/default/files/download/lang/de.phar
 
 # Configure nginx
 RUN sed -i -e"s/keepalive_timeout\s*65/keepalive_timeout 2/" /etc/nginx/nginx.conf && \
