@@ -9,6 +9,8 @@ WORKDIR /data
 ENV OSTICKET_VERSION 1.9.12
 ENV HOME /data
 
+ENV LOCALTIME America/Belem
+
 # requirements
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive \
@@ -28,6 +30,9 @@ RUN apt-get update \
   unzip \
   wget && \
   rm -rf /var/lib/apt/lists/*
+
+# Set time zone
+RUN ln -s -f /usr/share/zoneinfo/${LOCALTIME} /etc/localtime
 
 # Download & install OSTicket
 RUN wget -nv -O osTicket.zip http://osticket.com/sites/default/files/download/osTicket-v${OSTICKET_VERSION}.zip && \
