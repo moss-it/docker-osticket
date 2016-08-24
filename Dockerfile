@@ -9,8 +9,6 @@ WORKDIR /data
 ENV OSTICKET_VERSION 1.9.13
 ENV HOME /data
 
-ENV LOCALTIME America/Belem
-
 # requirements
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive \
@@ -31,17 +29,15 @@ RUN apt-get update \
   wget && \
   rm -rf /var/lib/apt/lists/*
 
-# Set time zone
-RUN ln -s -f /usr/share/zoneinfo/${LOCALTIME} /etc/localtime
-
 # Download & install OSTicket
-RUN wget -nv -O osTicket.zip http://osticket.com/sites/default/files/download/osTicket-v${OSTICKET_VERSION}.zip && \
+RUN wget -nv -O osTicket.zip https://github.com/osTicket/osTicket/releases/download/v${OSTICKET_VERSION}/osTicket-v${OSTICKET_VERSION}.zip && \
     unzip osTicket.zip && \
     rm osTicket.zip && \
-    chown -R www-data:www-data /data/upload/ && \
     mv /data/upload/setup /data/upload/setup_hidden && \
     chown -R root:root /data/upload/setup_hidden && \
-    chmod 700 /data/upload/setup_hidden
+    chmod 700 /data/upload/setup_hidden && \
+    chown -R www-data:www-data /data/upload/ && \
+    chmod -R 755 /data/upload/
     
 # Download languages packs
    RUN wget -nv -O upload/include/i18n/pt_BR.phar http://osticket.com/sites/default/files/download/lang/pt_BR.phar && \
