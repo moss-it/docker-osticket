@@ -38,7 +38,7 @@ RUN wget -nv -O osTicket.zip https://github.com/osTicket/osTicket/releases/downl
     chmod 700 /data/upload/setup_hidden && \
     chown -R www-data:www-data /data/upload/ && \
     chmod -R 755 /data/upload/
-    
+
 # Download languages packs
    RUN wget -nv -O upload/include/i18n/pt_BR.phar http://osticket.com/sites/default/files/download/lang/pt_BR.phar && \
     wget -nv -O upload/include/i18n/es_ES.phar http://osticket.com/sites/default/files/download/lang/es_ES.phar
@@ -61,6 +61,7 @@ RUN sed -i -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" /etc/php5/fpm/php.ini
 ADD virtualhost /etc/nginx/sites-available/default
 ADD supervisord.conf /data/supervisord.conf
 ADD msmtp.conf /data/msmtp.conf
+RUN touch /var/log/msmtp.log && chown www-data /var/log/msmtp.log
 ADD bin/ /data/bin
 
 VOLUME ["/data/upload/include/plugins","/var/log/nginx"]
