@@ -3,16 +3,16 @@ docker-osticket
 
 # Introduction
 
-Docker image for running version 1.9.12 of [OSTicket](http://osticket.com/).
+Docker image for running version 1.9.14 of [OSTicket](http://osticket.com/).
 
 This image has been created from the original docker-osticket image by [Petter A. Helset](mailto:petter@helset.eu).
 
 It has a few modifications:
 
   * Documentation added, hurray!
-  * Base OS image fixed to Ubuntu 14.04
+  * Base OS image fixed to Debian 8
   * AJAX issues fixed that made original image unusable
-  * Now designed to work with a linked [MySQL](https://registry.hub.docker.com/u/library/mysql/) docker container.
+  * Now designed to work with a linked [MySQL](https://hub.docker.com/u/library/mysql/) docker container.
   * Automates configuration file & database installation
   * EMail support 
 
@@ -34,7 +34,7 @@ docker run --name osticket_mysql -d -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_USER=
 Now run this image and link the MySQL container.
 
 ```bash
-docker run --name osticket -d --link osticket_mysql:mysql -p 8080:80 campbellsoftwaresolutions/osticket
+docker run --name osticket -d --link osticket_mysql:mysql -p 8080:80 moss/osticket
 ```
 
 Wait for the installation to complete then browse to your OSTicket staff control panel at `http://localhost:8080/scp`. Login with default admin user & password:
@@ -114,6 +114,10 @@ The TCP port to connect to on the server. Defaults to '25'. Usually one of 25, 4
 
 The envelope from address to use when sending email (note that is not the same as the From: header). This must be 
 provided for sending mail to function. However, if not specified, this will default to the value of `SMTP_USER` if this is provided.
+
+`SMTP_DOMAIN`
+
+The fully qualified domain to use when sending email.
 
 `SMTP_TLS`
 
